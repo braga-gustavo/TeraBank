@@ -23,10 +23,6 @@ public class CheckingAccountService {
 
     CheckingAccount cAccount;
 
-
-
-
-
     public Double generateNumber(){
         return Math.floor(Math.random()*10000);
     }
