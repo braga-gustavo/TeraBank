@@ -1,23 +1,22 @@
 package bragagustavo.com.github.TeraBank.domain.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckingAccountDto2 {
+public class CheckingAccountNoPassword {
 
      private Integer id;
 
@@ -52,10 +51,7 @@ public class CheckingAccountDto2 {
     @Email(message = "E-mail inválido")
     private String email;
 
-
-
     @Column(name = "conta", unique = true)
     private Double number;
-
 
 }
