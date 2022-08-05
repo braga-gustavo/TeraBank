@@ -13,13 +13,11 @@ import java.io.Serializable;
 
 //Conta poupança
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "savings_account")
-public class SavingsAccount implements Serializable {
-
-    public static final long serialVersionUID = 1L;
+public class SavingsAccount {
 
     @Id
     @Column(name = "id")
@@ -67,9 +65,5 @@ public class SavingsAccount implements Serializable {
     @NotEmpty(message = "O campo senha é obrigatório")
     @Length(min = 6, max = 6, message = "O campo senha deve possuir 6 digitos")
     private String password;
-
-
-
-
 
 }

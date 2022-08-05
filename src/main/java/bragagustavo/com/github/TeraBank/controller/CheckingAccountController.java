@@ -1,7 +1,7 @@
-package bragagustavo.com.github.TeraBank.domain.controller;
+package bragagustavo.com.github.TeraBank.controller;
 
 import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountDto;
-import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountDto2;
+import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountNoPassword;
 import bragagustavo.com.github.TeraBank.domain.entity.CheckingAccount;
 import bragagustavo.com.github.TeraBank.service.CheckingAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +21,21 @@ public class CheckingAccountController {
     @Autowired
     CheckingAccountService checkingAccountService;
 
-    @Autowired
-    CheckingAccountDto2 checkingAccountDto2;
-
-
-
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> createCheckingAccount(@RequestBody @Valid CheckingAccount checkingAccount) {
         checkingAccountService.createCheckingAccount(checkingAccount);
-
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(checkingAccount.getId()).toUri();
-
         return ResponseEntity.created(uri).build();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<CheckingAccountDto2> findCheckingAccount(@PathVariable Integer id) {
-
-        CheckingAccountDto2  checkingAccountDto2 = checkingAccountService.find(id);
-
-        return ResponseEntity.ok().body(checkingAccountDto2);
-
+    public ResponseEntity<CheckingAccountNoPassword> findCheckingAccount(@PathVariable Integer id) {
+        CheckingAccount checkingAccount = checkingAccountService.find(id);
+        CheckingAccountNoPassword noPassword = checkingAccountService.converterDto(checkingAccount);
+        return ResponseEntity.ok().body(noPassword);
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -55,12 +46,12 @@ public class CheckingAccountController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateCheckingAccount(@PathVariable Integer id, @Valid @RequestBody CheckingAccountDto checkingAccountDto) {
+    public ResponseEntity<Void> updateCheckingAccount(@PathVariable Integer id,
+                                                      @Valid @RequestBody CheckingAccountDto checkingAccountDto) {
         CheckingAccount checkingAccount = checkingAccountService.fromDto(checkingAccountDto);
         checkingAccount.setId(id);
-        checkingAccountService.updateCheckingAccount(checkingAccountDto2);
+        checkingAccountService.updateCheckingAccount(checkingAccountDto);
         return ResponseEntity.noContent().build();
-
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

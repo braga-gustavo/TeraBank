@@ -20,4 +20,5 @@ public class SavingsAccountDto {
     @NotEmpty(message = "O campo senha é obrigatório")
     @Length(min = 6, max = 6, message = "O campo senha deve possuir 6 digitos")
     private String password;
+
 }

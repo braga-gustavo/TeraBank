@@ -1,6 +1,7 @@
 package bragagustavo.com.github.TeraBank.domain.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -14,9 +15,10 @@ import java.math.BigDecimal;
 
 // Conta Corrente
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "checking_account")
 public class CheckingAccount implements Serializable {
 
@@ -65,8 +67,5 @@ public class CheckingAccount implements Serializable {
 
     @Column(name = "conta", unique = true)
     private Double number;
-
-
-
 
 }

@@ -11,17 +11,18 @@ import java.util.List;
 @Service
 public class SavingsAccountService {
 
-
     @Autowired
     SavingsAccountRepository savingsAccountRepository;
+
     public void createSavingsAccount(SavingsAccount savingsAccount) {
+
     }
 
     public SavingsAccount find(Integer id) {
         return null;
     }
 
-    public List<SavingsAccount> findAll(){
+    public List<SavingsAccount> findAll() {
         return savingsAccountRepository.findAll();
     }
 
@@ -34,6 +35,5 @@ public class SavingsAccountService {
 
     public void deleteSavingsAccount(Integer id) {
     }
-
 
 }

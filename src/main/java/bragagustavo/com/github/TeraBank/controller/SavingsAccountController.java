@@ -1,4 +1,4 @@
-package bragagustavo.com.github.TeraBank.domain.controller;
+package bragagustavo.com.github.TeraBank.controller;
 
 
 import bragagustavo.com.github.TeraBank.domain.dto.SavingsAccountDto;

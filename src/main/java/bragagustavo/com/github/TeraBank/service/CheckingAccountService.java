@@ -1,12 +1,14 @@
 package bragagustavo.com.github.TeraBank.service;
 
 import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountDto;
-import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountDto2;
+import bragagustavo.com.github.TeraBank.domain.dto.CheckingAccountNoPassword;
 import bragagustavo.com.github.TeraBank.domain.entity.CheckingAccount;
 import bragagustavo.com.github.TeraBank.exception.ObjectNotFoundException;
 import bragagustavo.com.github.TeraBank.repository.CheckingAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,61 +20,37 @@ public class CheckingAccountService {
     @Autowired
     CheckingAccountRepository checkingAccountRepository;
 
-
-    CheckingAccountDto2 checkingAccountDto2;
-
-    CheckingAccount cAccount;
-
-    public Double generateNumber(){
-        return Math.floor(Math.random()*10000);
+    public Double generateNumber() {
+        return Math.floor(Math.random() * 10000);
     }
 
+    public CheckingAccount find(Integer id) {
+        return checkingAccountRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Not Found"));
+    }
 
     public CheckingAccount createCheckingAccount(CheckingAccount checkingAccount) {
         checkingAccount.setId(null);
         checkingAccount.setAgency("001");
         checkingAccount.setBalance(BigDecimal.valueOf(0));
         checkingAccount.setNumber(generateNumber());
-
         return checkingAccountRepository.save(checkingAccount);
-    }
-
-    public CheckingAccountDto2 find(Integer id) {
-        Optional<CheckingAccount> checkingAccount = checkingAccountRepository.findById(id);
-
-
-
-               CheckingAccountDto2 dtoAccount = converterDto(checkingAccountDto2, cAccount);
-               CheckingAccount ca = new CheckingAccount();
-
-             return dtoAccount;
-
-       /* try{
-
-
-        }catch (ObjectNotFoundException e ){
-
-            throw new ObjectNotFoundException("Conta não encontrada: " + id);
-        }
-*/
-
     }
 
     public List<CheckingAccount> findAll() {
         return checkingAccountRepository.findAll();
     }
 
-
-    public CheckingAccount updateCheckingAccount(CheckingAccount checkingAccount) {
-        CheckingAccount checkingAccountToUpdate = find(checkingAccount.getId());
-        updateData(checkingAccountToUpdate, checkingAccount);
+    public CheckingAccount updateCheckingAccount(CheckingAccountDto accountDto) {
+        CheckingAccount checkingAccountToUpdate = find(accountDto.getId());
+        updateData(checkingAccountToUpdate, accountDto);
         return checkingAccountRepository.save(checkingAccountToUpdate);
     }
 
-    private void updateData(CheckingAccount checkingAccountToUpdate, CheckingAccount checkingAccount) {
-        checkingAccountToUpdate.setAdress(checkingAccount.getAdress());
-        checkingAccountToUpdate.setEmail(checkingAccount.getEmail());
-        checkingAccountToUpdate.setPassword(checkingAccount.getPassword());
+    private void updateData(CheckingAccount checkingAccountToUpdate, CheckingAccountDto accountDto) {
+        checkingAccountToUpdate.setAdress(accountDto.getAdress());
+        checkingAccountToUpdate.setEmail(accountDto.getEmail());
+        checkingAccountToUpdate.setPassword(accountDto.getPassword());
     }
 
     public void deleteCheckingAccount(Integer id) {
@@ -80,26 +58,40 @@ public class CheckingAccountService {
         try {
             checkingAccountRepository.deleteById(id);
         } catch (ObjectNotFoundException e) {
-            System.out.println("Conta não encontrada para ser deletada não encontrada: ");
+            System.out.println("Account not found");
         }
-
     }
 
     public CheckingAccount fromDto(CheckingAccountDto checkingAccountDto) {
-        return new CheckingAccount(checkingAccountDto.getId(),checkingAccountDto.getAdress(),  null,
-                null, null, null, checkingAccountDto .getEmail(), null,
-                checkingAccountDto.getPassword(), null);
+        return CheckingAccount.builder()
+                .id(checkingAccountDto.getId())
+                .name(null)
+                .adress(checkingAccountDto.getAdress())
+                .agency(null)
+                .cpf(null)
+                .balance(null)
+                .birth(null)
+                .email(checkingAccountDto.getEmail())
+                .password(checkingAccountDto.getPassword())
+                .number(null)
+                .build();
 
     }
 
-    public CheckingAccountDto2 converterDto(CheckingAccountDto2 checkingAccountDto2, CheckingAccount checkingAccount) {
+    public CheckingAccountNoPassword converterDto(
+            CheckingAccount checkingAccount) {
 
-
-        return new CheckingAccountDto2(checkingAccountDto2.getId(), checkingAccountDto2.getName(),  checkingAccountDto2.
-                getAdress(),checkingAccountDto2.getAgency(), checkingAccountDto2.getCpf(),
-                null, checkingAccountDto2 .getEmail(), checkingAccountDto2.getEmail(),
-                 checkingAccountDto2.getNumber());
-
-
+        return CheckingAccountNoPassword.builder()
+                .id(checkingAccount.getId())
+                .name(checkingAccount.getName())
+                .adress(checkingAccount.getAdress())
+                .agency(checkingAccount.getAgency())
+                .cpf(checkingAccount.getCpf())
+                .balance(checkingAccount.getBalance())
+                .birth(checkingAccount.getBirth())
+                .email(checkingAccount.getEmail())
+                .number(checkingAccount.getNumber())
+                .build();
     }
+
 }
